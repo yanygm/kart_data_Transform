@@ -74,13 +74,13 @@ class Formula():
     
         return(' '.join(result))
     
-    def __PrivateEval_Postfix(self,postfixExpr:str) -> float:
+    def __PrivateEval_Postfix(self,postfixExpr:str) -> double:
         operand_stack = Stack()
         tokenList = postfixExpr.split()
         for token in tokenList:
             # If the token is an operand, convert it from a string to an integer and push the value onto stack
             if token not in "abcdefghijklmnopqrstuvwxyz()+*-/":
-                operand_stack.push(float(token))
+                operand_stack.push(double(token))
             # If the token is an operator, *, /, +, or -, Pop the operandStack twice.     
             else:
                 operand2 = operand_stack.pop()
@@ -119,7 +119,7 @@ class Formula():
         # infix. 
         return s[0]
 
-    def __evaluate(self,op, op1:float, op2:float):
+    def __evaluate(self,op, op1:double, op2:double):
         if op == "*":
             return op1 * op2
         elif op == "/":
@@ -158,7 +158,7 @@ class Formula():
     def __noevaluate(self,X):
         raise AttributeError("'Formula' object has no attribute 'evaluate' (_bool is False).")
 
-    def __haveevaluate(self,X:float):
+    def __haveevaluate(self,X:double):
         expr=self.__Postfixformula.replace('x',str(X))
         expr=self.__expr_preprocess(expr)
         return self.__PrivateEval_Postfix(expr)
@@ -194,17 +194,17 @@ class Formula():
         result = self.__PrivatePostfixToInfix(self.__Postfixformula)
         return self.__expr_preprocess(result)
     
-    def verylimit_formulainvert_evaluate(self,Y:float):
+    def verylimit_formulainvert_evaluate(self,Y:double):
         invertformula=self.__expr_preprocess(self.__invertformula).replace('y',str(Y))
         return self.__PrivateEval_Postfix(invertformula)
         
 class formula_data():
     @overload
-    def __init__(self,dataname:str,formula:list[float],default:float|None=None) -> None : ...
+    def __init__(self,dataname:str,formula:list[double],default:double|None=None) -> None : ...
     @overload
-    def __init__(self,dataname:str,formula:Formula,default:float|int|None=None,useable:bool=True) -> None : ...
+    def __init__(self,dataname:str,formula:Formula,default:double|int|None=None,useable:bool=True) -> None : ...
 
-    def __init__(self,dataname:str,formula:Formula,default:float|int|None=None,useable:bool=True) -> None:
+    def __init__(self,dataname:str,formula:Formula,default:double|int|None=None,useable:bool=True) -> None:
         self.dataname=dataname
         if isinstance(formula,Formula):
             self.formula=formula
@@ -215,21 +215,21 @@ class formula_data():
         self.default=default
         self.useable=useable
 
-    def __formulacaculate(self,parameters:list[float]) -> Formula:
-        _decimal=max([len(float_to_str(i)) for i in parameters])
+    def __formulacaculate(self,parameters:list[double]) -> Formula:
+        _decimal=max([len(double_to_str(i)) for i in parameters])
         try:
             a=(parameters[2]-parameters[3])/(parameters[0]-parameters[1])
         except ZeroDivisionError:
             a=0
-        a=float_to_str(a,_decimal)
+        a=double_to_str(a,_decimal)
         try:
             b=parameters[2]-((parameters[2]-parameters[3])/(parameters[0]-parameters[1]))*parameters[0]
         except ZeroDivisionError:
             b=0
-        b=float_to_str(b,_decimal)
+        b=double_to_str(b,_decimal)
         return Formula(f"y = {a} * x + {b}",True)
 
-    def CreateFormula(self,parameters:list[float]) -> None:
+    def CreateFormula(self,parameters:list[double]) -> None:
         self.formula = self.__formulacaculate(parameters)
 
     def __getitem__(self, __key:str):
@@ -266,7 +266,7 @@ class formula_file_processer():
         if dataname.lower() in [i.lower() for i in self.data.keys()]:
             raise KeyError(f'Data {dataname} already in database.')
     
-    def newData(self,dataname:str,formula:Formula,default:float|None,useable:bool=True):
+    def newData(self,dataname:str,formula:Formula,default:double|None,useable:bool=True):
         self.checkDataname(dataname)
         self.data[dataname]=formula_data(dataname,formula,default,useable)
     
@@ -277,7 +277,7 @@ class formula_file_processer():
     
     def __readdefault(self,_any):
         try:
-            return float(_any)
+            return double(_any)
         except ValueError:
             return None
 
@@ -288,7 +288,7 @@ class formula_file_processer():
 
 
 
-class float_to_str_class():
+class double_to_str_class():
     def __init__(self) -> None:
         # create a new context for this task
         self.ctx = decimal.Context()
@@ -296,18 +296,18 @@ class float_to_str_class():
         # 20 digits should be enough for everyone :D
         self.ctx.prec = 8
 
-    def float_to_str(self,f):
+    def double_to_str(self,f):
         """
-        Convert the given float to a string,
+        Convert the given double to a string,
         without resorting to scientific notation
         """
         d1 = self.ctx.create_decimal(repr(f))
         return format(d1, 'f')
 
-_instance=float_to_str_class()
-def float_to_str(f:float,decimal:int=8):
+_instance=double_to_str_class()
+def double_to_str(f:double,decimal:int=8):
     _instance.ctx.prec = decimal
-    return _instance.float_to_str(float(f))
+    return _instance.double_to_str(double(f))
 
 if __name__=="__main__":
     testf=Formula("y = true ? 1 : 0",False)
