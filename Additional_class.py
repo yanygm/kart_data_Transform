@@ -127,12 +127,7 @@ class Formula():
         elif op == "+":
             return op1 + op2
         else:
-            return double_to_float_simulation(op1 - op2)
-            
-    def double_to_float_simulation(double_value):
-        single_precision_str = "{:.7f}".format(double_value)
-        single_precision_float = float(single_precision_str)
-        return single_precision_float
+            return op1 - op2
     
     def __isOperand(self,x:str):
         return ((x >= 'a' and x <= 'z') or
