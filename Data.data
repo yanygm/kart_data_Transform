@@ -69,3 +69,4 @@ wallCollGaugeMaxVelLoss , y = 1 * x + 0 , 200 , true
 wallCollGaugeMinVelBound , y = 1 * x + 0 , 200 , true
 draftMulAccelFactor , y = 1 * x + 0 , 1 , true
 draftTick , y = 1 * x + 0, 0 , true
+wallCollGaugeMinVelLoss , y = 1 * x + 0 , 50 , true
