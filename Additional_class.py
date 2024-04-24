@@ -74,13 +74,13 @@ class Formula():
     
         return(' '.join(result))
     
-    def __PrivateEval_Postfix(self,postfixExpr:str) -> double:
+    def __PrivateEval_Postfix(self,postfixExpr:str) -> float:
         operand_stack = Stack()
         tokenList = postfixExpr.split()
         for token in tokenList:
             # If the token is an operand, convert it from a string to an integer and push the value onto stack
             if token not in "abcdefghijklmnopqrstuvwxyz()+*-/":
-                operand_stack.push(double(token))
+                operand_stack.push(float(token))
             # If the token is an operator, *, /, +, or -, Pop the operandStack twice.     
             else:
                 operand2 = operand_stack.pop()
@@ -89,7 +89,7 @@ class Formula():
                 result = self.__evaluate(token,operand1,operand2)
                 # Push the result back on the stack. 
                 operand_stack.push(result)
-        return operand_stack.pop()
+        return round(operand_stack.pop(),7)
 
     def __PrivatePostfixToInfix(self,postfixExpr:str) -> str:
         '''postfix to infix conversion  
@@ -119,7 +119,7 @@ class Formula():
         # infix. 
         return s[0]
 
-    def __evaluate(self,op, op1:double, op2:double):
+    def __evaluate(self,op, op1:float, op2:float):
         if op == "*":
             return op1 * op2
         elif op == "/":
@@ -128,7 +128,7 @@ class Formula():
             return op1 + op2
         else:
             return op1 - op2
-    
+
     def __isOperand(self,x:str):
         return ((x >= 'a' and x <= 'z') or
                 (x >= 'A' and x <= 'Z')) 
@@ -200,11 +200,11 @@ class Formula():
         
 class formula_data():
     @overload
-    def __init__(self,dataname:str,formula:list[double],default:double|None=None) -> None : ...
+    def __init__(self,dataname:str,formula:list[float],default:float|None=None) -> None : ...
     @overload
-    def __init__(self,dataname:str,formula:Formula,default:double|int|None=None,useable:bool=True) -> None : ...
+    def __init__(self,dataname:str,formula:Formula,default:float|int|None=None,useable:bool=True) -> None : ...
 
-    def __init__(self,dataname:str,formula:Formula,default:double|int|None=None,useable:bool=True) -> None:
+    def __init__(self,dataname:str,formula:Formula,default:float|int|None=None,useable:bool=True) -> None:
         self.dataname=dataname
         if isinstance(formula,Formula):
             self.formula=formula
@@ -215,21 +215,21 @@ class formula_data():
         self.default=default
         self.useable=useable
 
-    def __formulacaculate(self,parameters:list[double]) -> Formula:
-        _decimal=max([len(double_to_str(i)) for i in parameters])
+    def __formulacaculate(self,parameters:list[float]) -> Formula:
+        _decimal=max([len(float_to_str(i)) for i in parameters])
         try:
             a=(parameters[2]-parameters[3])/(parameters[0]-parameters[1])
         except ZeroDivisionError:
             a=0
-        a=double_to_str(a,_decimal)
+        a=float_to_str(a,_decimal)
         try:
             b=parameters[2]-((parameters[2]-parameters[3])/(parameters[0]-parameters[1]))*parameters[0]
         except ZeroDivisionError:
             b=0
-        b=double_to_str(b,_decimal)
+        b=float_to_str(b,_decimal)
         return Formula(f"y = {a} * x + {b}",True)
 
-    def CreateFormula(self,parameters:list[double]) -> None:
+    def CreateFormula(self,parameters:list[float]) -> None:
         self.formula = self.__formulacaculate(parameters)
 
     def __getitem__(self, __key:str):
@@ -266,7 +266,7 @@ class formula_file_processer():
         if dataname.lower() in [i.lower() for i in self.data.keys()]:
             raise KeyError(f'Data {dataname} already in database.')
     
-    def newData(self,dataname:str,formula:Formula,default:double|None,useable:bool=True):
+    def newData(self,dataname:str,formula:Formula,default:float|None,useable:bool=True):
         self.checkDataname(dataname)
         self.data[dataname]=formula_data(dataname,formula,default,useable)
     
@@ -277,7 +277,7 @@ class formula_file_processer():
     
     def __readdefault(self,_any):
         try:
-            return double(_any)
+            return float(_any)
         except ValueError:
             return None
 
