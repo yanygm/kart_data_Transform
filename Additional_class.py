@@ -80,7 +80,7 @@ class Formula():
         for token in tokenList:
             # If the token is an operand, convert it from a string to an integer and push the value onto stack
             if token not in "abcdefghijklmnopqrstuvwxyz()+*-/":
-                operand_stack.push(float(token))
+                operand_stack.push(double(token))
             # If the token is an operator, *, /, +, or -, Pop the operandStack twice.     
             else:
                 operand2 = operand_stack.pop()
