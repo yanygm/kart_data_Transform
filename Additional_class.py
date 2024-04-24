@@ -89,7 +89,7 @@ class Formula():
                 result = self.__evaluate(token,operand1,operand2)
                 # Push the result back on the stack. 
                 operand_stack.push(result)
-        return round(operand_stack.pop(),7)
+        return operand_stack.pop()
 
     def __PrivatePostfixToInfix(self,postfixExpr:str) -> str:
         '''postfix to infix conversion  
