@@ -1,0 +1,28 @@
+name: lkk123
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: 3.x
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller
+    - name: Bundle app
+      run: |
+        pyinstaller --onefile lkk123.py
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: my-app
+        path: dist/lkk123.exe
