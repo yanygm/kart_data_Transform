@@ -22,7 +22,7 @@ jobs:
       run: |
         pyinstaller --onefile lkk123.py
     - name: Upload artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: my-app
+        name: lkk123
         path: dist/lkk123.exe
