@@ -74,7 +74,7 @@ class Formula():
     
         return(' '.join(result))
     
-    def __PrivateEval_Postfix(self,postfixExpr:str) -> float:
+    def __PrivateEval_Postfix(self,postfixExpr:str) -> double:
         operand_stack = Stack()
         tokenList = postfixExpr.split()
         for token in tokenList:
@@ -200,11 +200,11 @@ class Formula():
         
 class formula_data():
     @overload
-    def __init__(self,dataname:str,formula:list[float],default:float|None=None) -> None : ...
+    def __init__(self,dataname:str,formula:list[double],default:double|None=None) -> None : ...
     @overload
-    def __init__(self,dataname:str,formula:Formula,default:float|int|None=None,useable:bool=True) -> None : ...
+    def __init__(self,dataname:str,formula:Formula,default:double|int|None=None,useable:bool=True) -> None : ...
 
-    def __init__(self,dataname:str,formula:Formula,default:float|int|None=None,useable:bool=True) -> None:
+    def __init__(self,dataname:str,formula:Formula,default:double|int|None=None,useable:bool=True) -> None:
         self.dataname=dataname
         if isinstance(formula,Formula):
             self.formula=formula
@@ -215,21 +215,21 @@ class formula_data():
         self.default=default
         self.useable=useable
 
-    def __formulacaculate(self,parameters:list[float]) -> Formula:
-        _decimal=max([len(float_to_str(i)) for i in parameters])
+    def __formulacaculate(self,parameters:list[double]) -> Formula:
+        _decimal=max([len(double_to_str(i)) for i in parameters])
         try:
             a=(parameters[2]-parameters[3])/(parameters[0]-parameters[1])
         except ZeroDivisionError:
             a=0
-        a=float_to_str(a,_decimal)
+        a=double_to_str(a,_decimal)
         try:
             b=parameters[2]-((parameters[2]-parameters[3])/(parameters[0]-parameters[1]))*parameters[0]
         except ZeroDivisionError:
             b=0
-        b=float_to_str(b,_decimal)
+        b=double_to_str(b,_decimal)
         return Formula(f"y = {a} * x + {b}",True)
 
-    def CreateFormula(self,parameters:list[float]) -> None:
+    def CreateFormula(self,parameters:list[double]) -> None:
         self.formula = self.__formulacaculate(parameters)
 
     def __getitem__(self, __key:str):
@@ -266,7 +266,7 @@ class formula_file_processer():
         if dataname.lower() in [i.lower() for i in self.data.keys()]:
             raise KeyError(f'Data {dataname} already in database.')
     
-    def newData(self,dataname:str,formula:Formula,default:float|None,useable:bool=True):
+    def newData(self,dataname:str,formula:Formula,default:double|None,useable:bool=True):
         self.checkDataname(dataname)
         self.data[dataname]=formula_data(dataname,formula,default,useable)
     
@@ -277,7 +277,7 @@ class formula_file_processer():
     
     def __readdefault(self,_any):
         try:
-            return float(_any)
+            return double(_any)
         except ValueError:
             return None
 
