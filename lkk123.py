@@ -50,14 +50,14 @@ else:
             if content.is_integer():
                 content = int(content)
         except AttributeError:
-            output += index + '='' + str(content) + '\' '
+            output += index + '=\'' + str(content) + '\' '
             outputxmlroot.set(index,str(content))
             return
         if isinstance(content,float):
-            output += index + '='' + float_to_str(content) + '\' '
+            output += index + '=\'' + float_to_str(content) + '\' '
             outputxmlroot.set(index,float_to_str(content))
         elif isinstance(content,int):
-            output += index + '='' + str(content) + '\' '
+            output += index + '=\'' + str(content) + '\' '
             outputxmlroot.set(index,str(content))
         else:
             raise TypeError("'content' type is wrong.")
