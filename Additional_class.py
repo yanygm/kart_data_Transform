@@ -74,13 +74,13 @@ class Formula():
     
         return(' '.join(result))
     
-    def __PrivateEval_Postfix(self,postfixExpr:str) -> double:
+    def __PrivateEval_Postfix(self,postfixExpr:str) -> float:
         operand_stack = Stack()
         tokenList = postfixExpr.split()
         for token in tokenList:
             # If the token is an operand, convert it from a string to an integer and push the value onto stack
             if token not in "abcdefghijklmnopqrstuvwxyz()+*-/":
-                operand_stack.push(double(token))
+                operand_stack.push(float(token))
             # If the token is an operator, *, /, +, or -, Pop the operandStack twice.     
             else:
                 operand2 = operand_stack.pop()
